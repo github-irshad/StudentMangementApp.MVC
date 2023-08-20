@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace StudentMangementApp.MVC.Data;
 
@@ -13,4 +12,6 @@ public partial class Student
     public string LastName { get; set; } = null!;
 
     public DateTime? DateOfBirth { get; set; }
+
+    public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 }
