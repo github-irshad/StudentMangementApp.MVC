@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace StudentMangementApp.MVC.Data;
 
-public partial class SchoolmanagementdbContext : DbContext
+public partial class SchoolManagementDbContext : DbContext
 {
-    public SchoolmanagementdbContext(DbContextOptions<SchoolmanagementdbContext> options)
+    public SchoolManagementDbContext(DbContextOptions<SchoolManagementDbContext> options)
         : base(options)
     {
     }
@@ -21,57 +21,29 @@ public partial class SchoolmanagementdbContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("courses_pkey");
+            entity.HasKey(e => e.Id).HasName("PK__Courses__3214EC07792EA5EB");
 
-            entity.ToTable("courses");
+            entity.HasIndex(e => e.Code, "UQ__Courses__A25C5AA721A964B6").IsUnique();
 
-            entity.HasIndex(e => e.Code, "courses_code_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Code)
-                .HasMaxLength(5)
-                .HasColumnName("code");
-            entity.Property(e => e.Credits).HasColumnName("credits");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("name");
+            entity.Property(e => e.Code).HasMaxLength(5);
+            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Lecturer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("lecturers_pkey");
+            entity.HasKey(e => e.Id).HasName("PK__Lecturer__3214EC071ED5B976");
 
-            entity.ToTable("lecturers");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Dateofbirth).HasColumnName("dateofbirth");
-            entity.Property(e => e.Firstname)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("firstname");
-            entity.Property(e => e.Lastname)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("lastname");
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("students_pkey");
+            entity.HasKey(e => e.Id).HasName("PK__Students__3214EC0790851493");
 
-            entity.ToTable("students");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Dateofbirth).HasColumnName("dateofbirth");
-            entity.Property(e => e.Firstname)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("firstname");
-            entity.Property(e => e.Lastname)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("lastname");
+            entity.Property(e => e.DateOfBirth).HasColumnType("date");
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);
