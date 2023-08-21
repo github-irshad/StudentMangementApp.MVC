@@ -1,3 +1,4 @@
+using Auth0.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StudentMangementApp.MVC.Data;
@@ -5,7 +6,11 @@ using StudentMangementApp.MVC.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SchoolManagementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SchoolManagementDbConnection")));
-
+builder.Services.AddAuth0WebAppAuthentication(options =>
+{
+    options.Domain = builder.Configuration.GetValue<string>("Auth0:Domain");
+    options.ClientId = builder.Configuration.GetValue<string>("Auth0:ClientId");
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -24,7 +29,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
