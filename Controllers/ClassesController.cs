@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using StudentMangementApp.MVC.Data;
 
 namespace StudentMangementApp.MVC.Controllers
 {
+    [Authorize]
     public class ClassesController : Controller
     {
         private readonly SchoolManagementDbContext _context;
@@ -48,8 +50,18 @@ namespace StudentMangementApp.MVC.Controllers
         // GET: Classes/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id");
+            var courses = _context.Courses.Select(c => new
+            {
+                CourseName = $"{c.Code} - {c.Name} ({c.Credits} Credits)",
+                c.Id
+            });
+            ViewData["CourseId"] = new SelectList(courses, "Id", "CourseName");
+            var lecturers = _context.Lecturers.Select(p => new
+            {
+                FullName = $"{p.FirstName} {p.LastName}",
+                p.Id
+            });
+            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "FullName");
             return View();
         }
 
@@ -84,8 +96,18 @@ namespace StudentMangementApp.MVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", qclass.CourseId);
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", qclass.LecturerId);
+            var courses = _context.Courses.Select(c => new
+            {
+                CourseName = $"{c.Code} - {c.Name} ({c.Credits} Credits)",
+                c.Id
+            });
+            ViewData["CourseId"] = new SelectList(courses, "Id", "CourseName", qclass.CourseId);
+            var lecturers = _context.Lecturers.Select(p => new
+            {
+                FullName = $"{p.FirstName} {p.LastName}",
+                p.Id
+            });
+            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "FullName", qclass.LecturerId);
             return View(qclass);
         }
 
